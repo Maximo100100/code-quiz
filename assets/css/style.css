@@ -31,6 +31,7 @@ header a:hover {
     background: var(--primary-color);
     color: var(--tertiary-color);
     text-shadow: none;
+    cursor: pointer;
   }
 section {
     display: flex;
@@ -50,7 +51,7 @@ section p {
     display: flex;
     justify-content: space-around;
 }
-.btn {
+.btn, .clear-btn, .restart-btn {
     border: none;
     background-color: var(--primary-color);
     color: var(--tertiary-color);
@@ -61,4 +62,7 @@ section p {
     padding: 14px 34px;
     text-align: center;
     cursor: pointer;
+}
+.hidden {
+    display: none;
 }
