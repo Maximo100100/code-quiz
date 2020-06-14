@@ -1,1 +1,3 @@
-# code-quiz
+# [code-quiz](https://maximo100100.github.io/code-quiz/)
+
+This project was very hard and took me a long time. I had to do alot of googling since i was running into errors with DOM at every turn. That being said im kinda happy with how it turned out, i will say it does glitch when you go through the questions too fast. i didnt know how to fix this but i tried using a settimeout which ultimately made the problem worse so i took it out. I did learn alot while making this specifically how DOM elements need to be present for an eventlistener to work so you have to take into consideration whats currently loaded in the page.
