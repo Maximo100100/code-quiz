@@ -27,10 +27,10 @@ var questions = [
     },
 ];
 
-var startBtn = document.getElementById("start-btn");
-var submitBtn = document.getElementById("submit-btn");
-var restartBtn = document.getElementById("restart-btn");
-var clearBtn = document.getElementById("clear-btn");
+var startBtn = document.querySelector("button.start-btn");
+var submitBtn = document.querySelector("button.submit-btn");
+var restartBtn = document.querySelector("button.restart-btn");
+var clearBtn = document.querySelector("button.clear-btn");
 
 
 var time = (questions.length * 10 + 1);
@@ -45,6 +45,12 @@ var submitScoreEl = document.querySelector("#submit-score");
 var userNameInput;
 var answer;
 
+highScores = JSON.parse(localStorage.getItem("highScores") || "[]"),
+scoreList = document.getElementById("score-list");
+
+highScores.sort(function (a,b){
+    return b.score - a.score
+})
 
 function startQuiz() {
     document.getElementById("home-sect").classList.add("hidden");
@@ -76,7 +82,7 @@ function nextQuestion() {
     answerEL.innerHTML = "";
     
     var choices = questions[questionNum].c;
-
+    
     for (var i = 0; i < choices.length; i++) {
         var nextChoice = document.createElement("button");
         
@@ -87,8 +93,8 @@ function nextQuestion() {
 
 function startTimer() {
     var countdown = setInterval(function () {
-    time--;
-    timerEl.textContent = "Time: " + time;
+        time--;
+        timerEl.textContent = "Time: " + time;
         if (time <= 0 || questionNum === questions.length) {
             clearInterval(countdown);
             score();
@@ -113,110 +119,46 @@ function score() {
     scoreEl.textContent = "Your score is " + time + ".";
 }
 
-function addScore() {
+// this took me so much time before i found a fix
+if(startBtn){
+    startBtn.addEventListener("click", startQuiz);
+}
+if(submitBtn){
+    submitBtn.addEventListener("click", function (event) {
+        window.location.href = './highscores.html'
+        addScore();
+});
+}
+if(clearBtn){
+    clearBtn.addEventListener("click", function () {
+        localStorage.clear();
+        history.back()
+    });
+}
+if(restartBtn){
+    restartBtn.addEventListener("click", function () {
+        history.back();
+    });
+}
+
+// i did alot of googling to figure out this last chunk of code bc i had no idea 
+// how to even aproach it 
+
+function addScore () {
     userNameInput = document.getElementById("player").value
-var newScore = {
+var playerScore = {
         name: userNameInput,
         score: time
     };
+    // this "or" operator confuses me but i just took it from a method i saw on stackoverflow
 var highScores = JSON.parse(localStorage.getItem("highScores") || "[]");
-    highScores.push(newScore)
+    highScores.push(playerScore)
     localStorage.setItem("highScores", JSON.stringify(highScores));
-    highScores = JSON.parse(localStorage.getItem("highScores") || "[]"),
-    scoreList = document.getElementById("score-list");
-
-    highScores.sort(function (a,b){
-        return b.score - a.score
-    })
-
-    for (var s = 0; s < highScores.length; s++) {
-        var newLi = document.createElement("li")
-        newLi.textContent = highScores[s].name + " - " + highScores[s].score
-        scoreList.appendChild(newLi)
-    }
 }
 
-startBtn.addEventListener("click", startQuiz);
-submitBtn.addEventListener("click", function (event) {
-    addScore();
-    window.location.href = './highscores.html'
-    console.log("FUck")
-});
-clearBtn.addEventListener("click", function () {
-    localStorage.clear();
-    history.back()
-});
-restartBtn.addEventListener("click", function () {
-    history.back();
-});
 
-
-
-
-
-
-
-
-// var restartBtn = document.querySelector("button.restartBtn"),
-//     clearBtn = document.querySelector("button.clearBtn"),
-//     // get the highScores list and turn it back into an object
-//     highScores = JSON.parse(localStorage.getItem("highScores") || "[]"),
-//     scoreList = document.getElementById("score-list");
-
-//     // sort scores from high to low
-//     highScores.sort(function (a,b){
-//         return b.score - a.score
-//     })
-
-//     // display the scores
-//     for (var s = 0; s < highScores.length; s++) {
-//         var newLi = document.createElement("li")
-//         newLi.textContent = highScores[s].name + " - " + highScores[s].score
-//         scoreList.appendChild(newLi)
-//     }
-
-// function makeQuestions() {
-//     questionNumber++;
-//     answer = questions[questionNumber].answer
-
-//     questionHead.textContent = questions[questionNumber].title;
-//     answerChoices.innerHTML = "";
-
-//     var choices = questions[questionNumber].choices;
-
-//     for (var q = 0; q < choices.length; q++) {
-//         var nextChoice = document.createElement("button");
-
-//         nextChoice.textContent = choices[q]
-//         answerBtn = answerChoices.appendChild(nextChoice).setAttribute("class", "p-3 m-1 btn btn-light btn-block");
-//     }
-// }
-
-
-
-// function hideFeedback(){
-//     var pEl= document.getElementsByClassName("feedback")[0]
-//     pEl.style.display='none'
-// }
-
-// function showFeedback(){
-//     var pEl= document.getElementsByClassName("feedback")[0]
-//     pEl.removeAttribute('style');
-// }
-
-// answerChoices.addEventListener("click", function (event) {
-//     var pEl= document.getElementsByClassName("feedback")[0]
-    
-//     // evaluation of user's answer choices & feedback
-//     if (answer === event.target.textContent) {   
-//         pEl.innerHTML = "Correct!";
-//         setTimeout(hideFeedback,1000);
-//         showFeedback();   
-//     } else {
-//         pEl.innerHTML = "Sorry, that's incorrect.";
-//         setTimeout(hideFeedback,1000);
-//         secondsLeft = secondsLeft - 10;
-//         showFeedback();
-//     }    
-//     makeQuestions();
-// });
+for (var s = 0; s < highScores.length; s++) {
+    var newLi = document.createElement("li")
+    newLi.textContent = highScores[s].name + " - " + highScores[s].score
+    scoreList.appendChild(newLi)
+}
